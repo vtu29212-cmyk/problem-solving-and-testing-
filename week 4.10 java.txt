@@ -1,0 +1,65 @@
+public static void matrixRotation(List<List<Integer>> matrix, int r) {
+    int rows = matrix.size();
+    int columns = matrix.get(0).size();
+    int layers = Math.min(rows, columns) / 2;
+
+    for (int layer = 0; layer < layers; layer++) {
+        int top = layer;
+        int left = layer;
+        int bottom = rows - 1 - layer;
+        int right = columns - 1 - layer;
+
+        List<Integer> ring = new ArrayList<>();
+
+        // Store one matrix layer in clockwise order.
+        for (int j = left; j <= right; j++) {
+            ring.add(matrix.get(top).get(j));
+        }
+
+        for (int i = top + 1; i <= bottom; i++) {
+            ring.add(matrix.get(i).get(right));
+        }
+
+        for (int j = right - 1; j >= left; j--) {
+            ring.add(matrix.get(bottom).get(j));
+        }
+
+        for (int i = bottom - 1; i > top; i--) {
+            ring.add(matrix.get(i).get(left));
+        }
+
+        int rotation = r % ring.size();
+        int index = 0;
+
+        // Put values back after anti-clockwise rotation.
+        for (int j = left; j <= right; j++) {
+            matrix.get(top).set(j, ring.get((index + rotation) % ring.size()));
+            index++;
+        }
+
+        for (int i = top + 1; i <= bottom; i++) {
+            matrix.get(i).set(right, ring.get((index + rotation) % ring.size()));
+            index++;
+        }
+
+        for (int j = right - 1; j >= left; j--) {
+            matrix.get(bottom).set(j, ring.get((index + rotation) % ring.size()));
+            index++;
+        }
+
+        for (int i = bottom - 1; i > top; i--) {
+            matrix.get(i).set(left, ring.get((index + rotation) % ring.size()));
+            index++;
+        }
+    }
+
+    for (List<Integer> row : matrix) {
+        for (int j = 0; j < row.size(); j++) {
+            if (j > 0) {
+                System.out.print(" ");
+            }
+            System.out.print(row.get(j));
+        }
+        System.out.println();
+    }
+}
